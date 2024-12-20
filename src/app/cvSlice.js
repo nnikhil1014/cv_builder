@@ -1,4 +1,4 @@
-import {createSlice} from '@redujs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     personalInfo: {},
@@ -18,7 +18,7 @@ const cvSlice = createSlice({
             state.education.push(action.payload)
         },
         addWorkExperience: (state, action) => {
-            state.workExperiece.push(action.payload)
+            state.workExperience.push(action.payload)
         },
         addSkill: (state, action) => {
             state.skills.push(action.payload)

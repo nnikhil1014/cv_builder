@@ -1,158 +1,207 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {
+    updatePersonalInfo,
+    addEducation,
+    addWorkExperience,
+    addSkill,
+} from './app/cvSlice';
+import Input from './Input';
 
 function CVForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    education: '',
-    workExperience: '',
-    skills: ''
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
+
+    // Local states for each section
+  const [personalDetails, setPersonalDetails] = useState({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
     });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    // You can send this data to your server or process it further here
-  };
+    const [education, setEducation] = useState([{ degree: '', institution: '', year: '' }]);
+    const [workExperience, setWorkExperience] = useState([{ company: '', role: '', duration: '' }]);
+    const [skills, setSkills] = useState('');
 
-  return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl w-full bg-white p-8 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Your CV</h1>
+    // Handle changes for Personal Details
+    const handlePersonalChange = (e) => {
+        const { name, value } = e.target;
+        setPersonalDetails({ ...personalDetails, [name]: value });
+    };
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Personal Details */}
-          <div className="p-6 bg-gray-50 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Personal Details</h2>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
+    // Handle changes for Education
+    const handleEducationChange = (index, field, value) => {
+        const updatedEducation = [...education];
+        updatedEducation[index][field] = value;
+        setEducation(updatedEducation);
+    };
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
+    // Handle changes for Work Experience
+    const handleWorkChange = (index, field, value) => {
+        const updatedWorkExperience = [...workExperience];
+        updatedWorkExperience[index][field] = value;
+        setWorkExperience(updatedWorkExperience);
+    };
 
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
+    // Handle submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                <textarea
-                  id="address"
-                  name="address"
-                  rows="3"
-                  placeholder="Enter your address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                ></textarea>
-              </div>
+        // Dispatch all sections to Redux
+        dispatch(updatePersonalInfo(personalDetails));
+        education.forEach((edu) => dispatch(addEducation(edu)));
+        workExperience.forEach((work) => dispatch(addWorkExperience(work)));
+        dispatch(addSkill(skills.split(','))); // Split skills by commas into an array
+
+        navigate('/preview'); // Redirect to preview page
+    };
+
+    return (
+        <div className="bg-gray-100 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl w-full bg-white p-8 rounded-xl shadow-lg">
+                <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Your CV</h1>
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Personal Details */}
+                    <section>
+                        <h2 className="text-xl font-semibold mb-4">Personal Details</h2>
+                        <Input 
+                            type='text'
+                            name='name'
+                            placeholder='Name'
+                            value={personalDetails.name}
+                            onChange={handlePersonalChange}
+                        />
+
+                        <Input 
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={personalDetails.email}
+                            onChange={handlePersonalChange}
+                        />
+
+                        <Input 
+                            type="tel"
+                            name="phone"
+                            placeholder="Phone"
+                            value={personalDetails.phone}
+                            onChange={handlePersonalChange}
+                        />
+
+                        <textarea
+                            name="address"
+                            placeholder="Address"
+                            value={personalDetails.address}
+                            onChange={handlePersonalChange}
+                            className="block w-full mb-4 p-2 border"
+                        ></textarea>
+                    </section>
+
+                    {/* Education */}
+                    <section>
+                        <h2 className="text-xl font-semibold mb-4">Education</h2>
+                        {education.map((edu, index) => (
+                            <div key={index} className="mb-4">
+                                
+                                <Input 
+                                    type="text"
+                                    placeholder="Degree"
+                                    value={edu.degree}
+                                    onChange={(e) => handleEducationChange(index, 'degree', e.target.value)}
+                                />
+
+                                <Input 
+                                    type="text"
+                                    placeholder="Institution"
+                                    value={edu.institution}
+                                    onChange={(e) => handleEducationChange(index, 'institution', e.target.value)}
+                                />
+
+                                <Input 
+                                    type="text"
+                                    placeholder="Year"
+                                    value={edu.year}
+                                    onChange={(e) => handleEducationChange(index, 'year', e.target.value)}
+                                />
+
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() => setEducation([...education, { degree: '', institution: '', year: '' }])}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            Add More Education
+                        </button>
+                    </section>
+
+                    {/* Work Experience */}
+                    <section>
+                        <h2 className="text-xl font-semibold mb-4">Work Experience</h2>
+                        {workExperience.map((work, index) => (
+                            <div key={index} className="mb-4">
+
+                                <Input 
+                                    type="text"
+                                    placeholder="Company"
+                                    value={work.company}
+                                    onChange={(e) => handleWorkChange(index, 'company', e.target.value)}
+                                />
+
+                                <Input 
+                                    type="text"
+                                    placeholder="Role"
+                                    value={work.role}
+                                    onChange={(e) => handleWorkChange(index, 'role', e.target.value)}
+                                />
+
+                                <Input 
+                                    type="text"
+                                    placeholder="Duration"
+                                    value={work.duration}
+                                    onChange={(e) => handleWorkChange(index, 'duration', e.target.value)}
+                                />
+
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setWorkExperience([...workExperience, { company: '', role: '', duration: '' }])
+                            }
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            Add More Work Experience
+                        </button>
+                    </section>
+
+                    {/* Skills */}
+
+                    <section>
+                        <h2 className="text-xl font-semibold mb-4">Skills</h2>
+                        <textarea
+                            placeholder="Enter skills (comma-separated)"
+                            value={skills}
+                            onChange={(e) => setSkills(e.target.value)}
+                            className="block w-full mb-4 p-2 border"
+                        ></textarea>
+                    </section>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 text-white py-3 rounded-lg"
+                    >
+                        Submit CV
+                    </button>
+                </form>
             </div>
-          </div>
-
-          {/* Education */}
-          <div className="p-6 bg-gray-50 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Education</h2>
-            <div>
-              <label htmlFor="education" className="block text-sm font-medium text-gray-700">Education</label>
-              <textarea
-                id="education"
-                name="education"
-                rows="4"
-                placeholder="Enter your education details"
-                value={formData.education}
-                onChange={handleChange}
-                className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
-            </div>
-          </div>
-
-          {/* Work Experience */}
-          <div className="p-6 bg-gray-50 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Work Experience</h2>
-            <div>
-              <label htmlFor="workExperience" className="block text-sm font-medium text-gray-700">Work Experience</label>
-              <textarea
-                id="workExperience"
-                name="workExperience"
-                rows="4"
-                placeholder="Enter your work experience"
-                value={formData.workExperience}
-                onChange={handleChange}
-                className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
-            </div>
-          </div>
-
-          {/* Skills */}
-          <div className="p-6 bg-gray-50 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Skills</h2>
-            <div>
-              <label htmlFor="skills" className="block text-sm font-medium text-gray-700">Skills</label>
-              <textarea
-                id="skills"
-                name="skills"
-                rows="4"
-                placeholder="Enter your skills (comma-separated)"
-                value={formData.skills}
-                onChange={handleChange}
-                className="mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="w-full py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors duration-300"
-            >
-              Submit CV
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
 
 export default CVForm;
