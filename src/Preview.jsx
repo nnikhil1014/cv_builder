@@ -13,13 +13,13 @@ function CVPage() {
       <div className="max-w-4xl mx-auto bg-white p-10 shadow-lg">
         <header className="flex items-center space-x-4 border-b pb-4">
           <img
-            src="profile-picture.jpg"
+            src="./profile-picture.png"
             alt="Profile"
             className="w-24 h-24 rounded-full border"
           />
           <div>
             <h1 className="text-3xl font-bold">{personalDetails.name}</h1>
-            <p className="text-gray-600">Based in India</p>
+            <p className="text-gray-600">Software Developer</p>
           </div>
         </header>
 
@@ -85,8 +85,29 @@ function CVPage() {
 
         </section>
 
+        <section className="mt-6">
+         <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Education</h2>
+
+         <ul className="mt-4 flex flex-wrap gap-4">
+            {education.map((edu, index) => (
+              <li className="px-4 py-2 bg-blue-100 rounded-lg" key={index}>
+                <div>
+                  <strong>Degree:</strong> {edu.degree}
+                </div>
+                <div>
+                  <strong>Institution:</strong> {edu.institution}
+                </div>
+                <div>
+                  <strong>Year:</strong> {edu.year}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+        </section>
+
         <footer className="mt-10 text-center text-gray-500">
-          <p>&copy; 2024 Aspiring Frontend Developer. All rights reserved.</p>
+          <p>&copy; 2024 Made By Nikhil Kumar</p>
         </footer>
       </div>
     </div>
