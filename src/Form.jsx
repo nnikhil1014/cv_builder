@@ -54,6 +54,7 @@ function CVForm() {
         dispatch(updatePersonalInfo(personalDetails));
         education.forEach((edu) => dispatch(addEducation(edu)));
         workExperience.forEach((work) => dispatch(addWorkExperience(work)));
+        console.log(skills.split(',')); // Check if this outputs the expected array
         dispatch(addSkill(skills.split(','))); // Split skills by commas into an array
 
         navigate('/preview'); // Redirect to preview page

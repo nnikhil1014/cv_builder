@@ -1,6 +1,13 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 function CVPage() {
+  const personalDetails = useSelector((state) => state.cv.personalInfo);
+  const education = useSelector((state) => state.cv.education);
+  const workExperience = useSelector((state) => state.cv.workExperience);
+  const skills = useSelector((state) => state.cv.skills);
+
+
   return (
     <div className="bg-gray-100 min-h-screen py-10">
       <div className="max-w-4xl mx-auto bg-white p-10 shadow-lg">
@@ -11,7 +18,7 @@ function CVPage() {
             className="w-24 h-24 rounded-full border"
           />
           <div>
-            <h1 className="text-3xl font-bold">Aspiring Frontend Developer</h1>
+            <h1 className="text-3xl font-bold">{personalDetails.name}</h1>
             <p className="text-gray-600">Based in India</p>
           </div>
         </header>
@@ -21,70 +28,61 @@ function CVPage() {
           <ul className="mt-4 space-y-2">
             <li>
               <a
-                href="mailto:aspiringfe@helloworld.com"
+                href={`mailto:${personalDetails.email}`}
                 className="text-blue-600 hover:underline"
               >
-                aspiringfe@helloworld.com
+                {personalDetails.email}
               </a>
             </li>
             <li>
               <a
-                href="tel:+910000000000"
+                href={`tel:${personalDetails.phone}`}
                 className="text-blue-600 hover:underline"
               >
-                +91 00000 00000
+                {personalDetails.phone}
               </a>
             </li>
             <li>
               <a
-                href="https://www.linkedin.com/in/aspiringfe"
                 target="_blank"
-                rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
-                LinkedIn Profile
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/aspiringfe"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                GitHub Profile
+                {personalDetails.address}
               </a>
             </li>
           </ul>
         </section>
 
         <section className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Skills</h2>
-          <ul className="mt-4 flex flex-wrap gap-4">
-            <li className="px-4 py-2 bg-blue-100 rounded-lg">JavaScript</li>
-            <li className="px-4 py-2 bg-blue-100 rounded-lg">React</li>
-            <li className="px-4 py-2 bg-blue-100 rounded-lg">CSS</li>
-            <li className="px-4 py-2 bg-blue-100 rounded-lg">TailwindCSS</li>
-          </ul>
+        <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Skills</h2>
+        <ul className="mt-4 flex flex-wrap gap-4">
+          {skills.map((skill, index) => (
+            <li className="px-4 py-2 bg-blue-100 rounded-lg" key={index}><div>{skill}</div></li>
+          ))}
+        </ul>
+
         </section>
 
+          {console.log(workExperience)}
         <section className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Projects</h2>
-          <ul className="mt-4 space-y-4">
-            <li className="p-4 border rounded-lg shadow-sm">
-              <h3 className="text-lg font-bold">Project Name</h3>
-              <p className="text-gray-600">A brief description of the project.</p>
-              <a
-                href="https://github.com/project"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                View on GitHub
-              </a>
-            </li>
-            {/* Add more projects as needed */}
+         <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Work Experience</h2>
+
+         <ul className="mt-4 flex flex-wrap gap-4">
+            {workExperience.map((work, index) => (
+              <li className="px-4 py-2 bg-blue-100 rounded-lg" key={index}>
+                <div>
+                  <strong>Company:</strong> {work.company}
+                </div>
+                <div>
+                  <strong>Role:</strong> {work.role}
+                </div>
+                <div>
+                  <strong>Duration:</strong> {work.duration}
+                </div>
+              </li>
+            ))}
           </ul>
+
         </section>
 
         <footer className="mt-10 text-center text-gray-500">

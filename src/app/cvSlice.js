@@ -15,14 +15,16 @@ const cvSlice = createSlice({
             state.personalInfo = action.payload
         },
         addEducation: (state, action) => {
-            state.education.push(action.payload)
+            state.education = action.payload
+
         },
         addWorkExperience: (state, action) => {
+            // state.workExperience = action.payload
             state.workExperience.push(action.payload)
         },
         addSkill: (state, action) => {
-            state.skills.push(action.payload)
-        }
+            state.skills = action.payload; // Replace the skills array with new values
+        },
     }
 })
 
