@@ -43,7 +43,7 @@ _Below is an example of how you can instruct your audience on installing and set
    ```
 2. Navigate to the project directory:
    ```sh
-   cd password-generator
+   cd cv_builder
    ```
 
 6. Install required dependencies
